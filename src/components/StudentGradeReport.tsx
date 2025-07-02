@@ -166,7 +166,7 @@ export default function StudentGradeReport({ studentId, onClose }: StudentGradeR
         evaluationGrades,
         finalGrade,
         finalPercentage,
-        status: enrollment.status || 'Activo' // Valor por defecto si status no existe
+        status: 'active' // Valor fijo que coincide con uno de los literales definidos en la interfaz
       }
     }).filter(Boolean) as SubjectGradeData[]
 
