@@ -63,6 +63,7 @@ export interface RegisterData {
 
 export interface Student {
   id: number
+  userId?: number // ID del profesor propietario (para compatibilidad con auth.ts)
   name: string
   surname: string
   email: string
@@ -139,6 +140,7 @@ export interface EvaluationTest {
   date?: string
   weight: number // Peso en la nota de la evaluación (0-100)
   maxScore: number
+  maxGrade: number // Alias para compatibilidad con ambos sistemas
   isActive: boolean
   createdAt: string
   updatedAt: string
@@ -313,4 +315,5 @@ export interface Enrollment {
   isActive: boolean
   createdAt: string
   updatedAt: string
+  status?: string // Estado de la matrícula (Aprobado, Suspenso, etc.)
 }

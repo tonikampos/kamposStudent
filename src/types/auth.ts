@@ -200,6 +200,7 @@ export interface EvaluationTest {
   type?: string // Tipo de prueba (examen, trabajo, práctica, etc.)
   weight: number // Peso dentro de esta evaluación
   maxGrade: number
+  maxScore?: number // Alias para compatibilidad con otros componentes
   minPassingGrade: number
   isActive: boolean
   subjectEvaluationId?: number // ID de la evaluación a la que pertenece

@@ -20,7 +20,8 @@ import {
   Subject, 
   EvaluationSystem, 
   TestScore, 
-  Enrollment 
+  Enrollment,
+  EvaluationTest
 } from '@/types'
 import { 
   getStudents, 
@@ -28,7 +29,7 @@ import {
   getEvaluationSystems, 
   getEnrollments,
   getTestScores 
-} from '@/lib/dataManager'
+} from '@/lib/userDataManager'
 import { generateStudentGradeReportPDF } from '@/lib/pdfGenerator'
 
 interface StudentGradeReportProps {
@@ -96,13 +97,15 @@ export default function StudentGradeReport({ studentId, onClose }: StudentGradeR
       const evaluationGrades = evaluationSystem?.evaluations.map(evaluation => {
         const tests = evaluation.tests.map(test => {
           const score = testScores.find(ts => ts.testId === test.id && ts.studentId === studentId)
+          // Usar maxGrade si maxScore no existe
+          const maxValue = 'maxScore' in test ? test.maxScore : ('maxGrade' in test ? test.maxGrade : 10)
           return {
             testId: test.id,
             testName: test.name,
             testWeight: test.weight,
             score: score?.score,
-            maxScore: test.maxScore,
-            percentage: score ? (score.score / test.maxScore) * 100 : undefined
+            maxScore: maxValue,
+            percentage: score ? (score.score / maxValue) * 100 : undefined
           }
         })
 

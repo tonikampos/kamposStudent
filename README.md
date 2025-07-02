@@ -193,7 +193,7 @@ gestion/
 - **Ver estadísticas**: Gráficos responsive
 
 ### PWA (Progressive Web App):
-- Funciona offline (datos locales)
+- Funciona offline (datos locais)
 - Instalable como app nativa
 - Notificaciones push (futuro)
 
@@ -220,7 +220,7 @@ gestion/
 
 ### Archivado de cursos anteriores:
 - Exportar datos a PDF
-- Comprimir base de datos antigua
+- Comprimir base de datos antiga
 - Mantener histórico accesible
 
 ## 🆘 Resolución de Problemas
@@ -236,7 +236,7 @@ gestion/
    - Comprobar permisos de escritura
 
 3. **Lentitud en la aplicación**:
-   - Limpiar caché del navegador
+   - Limpiar caché do navegador
    - Optimizar base de datos
 
 ### Logs de error:
@@ -259,14 +259,14 @@ npm audit fix
 
 ## 📞 Soporte
 
-Para soporte técnico o consultas:
+Para soporte técnico ou consultas:
 - Documentación: `/docs`
 - GitHub Issues: Para reportar bugs
 - Email: [tu-email@educacion.es]
 
 ## 📜 Licencia
 
-Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detalles.
+Este proxecto está baixo a licencia MIT. Ver arquivo `LICENSE` para máis detalles.
 
 ## 🚀 Roadmap
 
@@ -276,7 +276,7 @@ Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detall
 - [ ] Calendario de exámenes
 - [ ] Integración con Moodle
 - [ ] App móvil nativa
-- [ ] Módulo de padres/tutores
+- [ ] Módulo de pais/tutores
 
 ### Mejoras planificadas:
 - [ ] Más tipos de gráficos
@@ -289,4 +289,23 @@ Este proyecto está bajo la licencia MIT. Ver archivo `LICENSE` para más detall
 
 **¡Listo para revolucionar tu gestión académica!** 🎓
 
-La aplicación está diseñada pensando en la experiencia del profesor de ciclos formativos, combinando simplicidad de uso con potencia funcional.
+A aplicación está deseñada pensando na experiencia do profesor de ciclos formativos, combinando simplicidade de uso cunha potencia funcional.
+
+## 🌐 Despliegue en Netlify
+
+Este proxecto está configurado para ser despregado en Netlify. Para despregar na túa propia instancia de Netlify:
+
+1. Fai un fork deste repositorio ou clónalo e súbeo ao teu propio repositorio en GitHub
+2. Inicia sesión en [Netlify](https://www.netlify.com/)
+3. Fai clic en "New site from Git" e selecciona GitHub
+4. Atopa e selecciona o teu repositorio
+5. Configuración de despregue:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+6. Fai clic en "Deploy site"
+
+Netlify detectará automaticamente que é un proxecto Next.js e aplicará a configuración necesaria grazas ao arquivo `netlify.toml` incluído no repositorio.
+
+### ⚙️ Variables de entorno (se son necesarias)
+
+Se necesitas configurar variables de entorno para o teu despregue, podes facelo na sección "Site settings" > "Build & deploy" > "Environment variables" do teu panel de control de Netlify.
