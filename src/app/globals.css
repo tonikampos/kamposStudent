@@ -1,0 +1,554 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+    /* Evitar saltos visuales al cambiar contenido */
+    overflow-x: hidden;
+    /* Mejorar la legibilidad en pantallas de alta resolución */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Evitar selección accidental de texto en elementos de navegación */
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Mejoras de accesibilidad */
+  *:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  /* Reducir movimiento para usuarios que prefieren menos animaciones */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+  
+  /* === LAYOUT ESTABILIZADO === */
+  
+  /* Contenedor principal con grid para layout estable */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 256px 1fr;
+    gap: 2rem;
+    align-items: start;
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .main-layout {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+  
+  /* Sidebar con posición fija y dimensiones estables */
+  .sidebar-container {
+    @apply bg-white rounded-lg shadow-md;
+    position: sticky;
+    top: 2rem;
+    width: 256px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    transition: none;
+    /* Evitar cualquier animación que cause movimiento */
+    will-change: auto;
+    transform: translateZ(0);
+    /* Forzar capa de composición para mejor rendimiento */
+    contain: layout style;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar-container {
+      position: static;
+      width: 100%;
+      max-height: none;
+    }
+  }
+  
+  /* Contenido principal con dimensiones estables */
+  .main-content {
+    width: 100%;
+    min-height: calc(100vh - 200px);
+    /* Contener cambios de layout dentro del contenedor */
+    contain: layout;
+    /* Evitar colapso durante transiciones */
+    overflow: hidden;
+  }
+  
+  /* Wrapper del contenido con transiciones suaves */
+  .content-wrapper {
+    position: relative;
+    min-height: 600px;
+    /* Altura mínima para evitar saltos */
+    width: 100%;
+  }
+  
+  /* Transiciones de contenido optimizadas */
+  .content-transition {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    /* Usar GPU para transiciones suaves */
+    will-change: opacity;
+  }
+  
+  .content-transition.transitioning {
+    opacity: 0.6;
+  }
+  
+  /* Botones de navegación estables */
+  .nav-button {
+    @apply w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200;
+    min-height: 48px;
+    /* Altura fija para evitar cambios de layout */
+    white-space: nowrap;
+    /* Evitar wrap del texto */
+    position: relative;
+    /* Para efectos de hover */
+    overflow: hidden;
+  }
+  
+  .nav-button.active-personal {
+    @apply bg-blue-600 text-white shadow-md;
+  }
+  
+  .nav-button.active-config {
+    @apply bg-orange-600 text-white shadow-md;
+  }
+  
+  .nav-button:not(.active-personal):not(.active-config) {
+    @apply text-gray-700 hover:bg-gray-100;
+  }
+  
+  /* Hover effect suave */
+  .nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  
+  .nav-button:hover::before {
+    opacity: 0.1;
+  }
+  
+  /* Scrollbar personalizada y elegante */
+  .sidebar-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .sidebar-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+  }
+  
+  .sidebar-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .sidebar-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
+  /* === MEJORAS RESPONSIVE === */
+  
+  /* Mobile menu overlay */
+  .mobile-menu-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+  }
+  
+  .mobile-menu-panel {
+    @apply fixed top-0 left-0 w-80 h-full bg-white z-50 shadow-2xl;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .mobile-menu-panel.open {
+    transform: translateX(0);
+  }
+  
+  /* === OPTIMIZACIONES DE RENDIMIENTO === */
+  
+  /* Evitar repaints innecesarios */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+  
+  /* Aceleración de hardware para elementos animados */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+  
+  /* Suavizar fuentes en pantallas de alta resolución */
+  .text-smooth {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* === INDICADORES VISUALES === */
+  
+  /* Skeleton loading para contenido que está cargando */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  /* Pulse effect para elementos interactivos */
+  .pulse-hover:hover {
+    animation: pulse 0.8s ease-in-out;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+  }
+  
+  /* Shimmer effect para botones activos */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+  
+  .shimmer:hover::before {
+    left: 100%;
+  }
+  
+  /* === MEJORAS DE ACCESIBILIDAD === */
+  
+  /* Focus visible mejorado para navegación por teclado */
+  .focus-ring:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* Hover states más visibles */
+  .hover-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  /* === ESTADOS DE TRANSICIÓN AVANZADOS === */
+  
+  /* Fade in desde arriba */
+  .fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Slide in desde la izquierda */
+  .slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* === MODALES MEJORADOS === */
+  
+  /* Modal overlay optimizado */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+    overflow-y: auto;
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Modal container que siempre es visible */
+  .modal-container {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    margin: 2rem 0;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  /* Header pegajoso del modal */
+  .modal-header-sticky {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  /* Footer pegajoso del modal */
+  .modal-footer-sticky {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  /* Contenido del modal con scroll suave */
+  .modal-content {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  
+  /* Scroll personalizado para modales */
+  .modal-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .modal-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .modal-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+  
+  .modal-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+  
+  /* Asegurar que el modal siempre empieza desde arriba */
+  .modal-overlay.modal-top {
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+  
+  /* Responsive para modales */
+  @media (max-width: 768px) {
+    .modal-overlay {
+      padding: 1rem 0.5rem;
+    }
+    
+    .modal-container {
+      margin: 1rem 0;
+      max-height: calc(100vh - 2rem);
+    }
+  }
+  
+  /* === TABLA DE CURSOS MEJORADA === */
+  
+  /* Alternar colores de filas */
+  .bg-gray-25 {
+    background-color: #fafafa;
+  }
+  
+  /* Tabla responsive con scroll horizontal */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Header de tabla pegajoso */
+  .table-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f9fafb;
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Celdas de tabla con altura mínima */
+  .table-cell {
+    min-height: 3rem;
+    vertical-align: top;
+  }
+  
+  /* Hover effect para filas de tabla */
+  .table-row-hover:hover {
+    background-color: #f3f4f6 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
+  
+  /* Badge de nivel con animación */
+  .level-badge {
+    transition: all 0.2s ease;
+  }
+  
+  .level-badge:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Botón de acción mejorado */
+  .action-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+  
+  .action-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Texto truncado mejorado */
+  .text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: 2.8em;
+  }
+  
+  /* Scroll personalizado para tabla */
+  .table-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
+  /* Clases de tamaño optimizadas para modales */
+  .modal-size-sm {
+    max-width: 28rem; /* 448px */
+  }
+  
+  .modal-size-md {
+    max-width: 32rem; /* 512px */
+  }
+  
+  .modal-size-lg {
+    max-width: 42rem; /* 672px */
+  }
+  
+  .modal-size-xl {
+    max-width: 56rem; /* 896px */
+  }
+  
+  .modal-size-2xl {
+    max-width: 64rem; /* 1024px */
+  }
+  
+  /* Altura optimizada para evitar scroll innecesario */
+  .modal-height-auto {
+    max-height: 95vh;
+  }
+  
+  .modal-height-full {
+    max-height: calc(100vh - 2rem);
+  }
+}
